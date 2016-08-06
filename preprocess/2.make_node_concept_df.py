@@ -7,9 +7,12 @@ from glob import glob
 import pandas
 import pickle
 import re
-import os
+import os,sys
 
-base = sys.argv[1]
+try:
+    base = sys.argv[1]
+except:
+    base='/home/01329/poldrack/DATADIR/semantic-image-comparison/data'
 data = "%s/data" %base
 node_pickles = glob("%s/groups/*.pkl" %data)
 results = "%s/results" %base
@@ -32,7 +35,7 @@ X = pandas.DataFrame(0,index=image_ids,columns=concepts)
 for group_pkl in node_pickles:
     group = pickle.load(open(group_pkl,"rb"))
     concept_id = os.path.basename(group_pkl).split("group_")[-1].replace(".pkl","")
-    print "Parsing concept %s" %(concept_id)
+    print("Parsing concept %s" %(concept_id))
     image_ids_in = [int(os.path.basename(x).split(".")[0]) for x in group["in"]]
     image_ids_out = [int(os.path.basename(x).split(".")[0]) for x in group["out"]]
     X.loc[image_ids_in,concept_id] = 1 
@@ -65,7 +68,7 @@ weight = 0.8
 
 # For each row (image) find related concepts
 for image_id in Xweighted.index.tolist():
-    print "Parsing image %s" %(image_id)
+    print("Parsing image %s" %(image_id))
     concept_series = Xweighted.loc[image_id,Xweighted.loc[image_id,:]!=0]
     for concept in concept_series.index.tolist():
         current_node = relationship_table.loc[relationship_table.id==concept,:]

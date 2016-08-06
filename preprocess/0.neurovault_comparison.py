@@ -18,7 +18,11 @@ from pybraincompare.compare.maths import TtoZ
 
 # Set up work folders for data
 # For the VM: these paths will be environmental variables
-base = sys.argv[1]
+try:
+    base = sys.argv[1]
+except:
+    base='/home/01329/poldrack/DATADIR/semantic-image-comparison/data'
+
 
 results = "%s/results" %base  # any kind of tsv/result file
 data = "%s/data" %base        # mostly images
@@ -123,11 +127,11 @@ def pad_zeros(the_id,total_length=6):
 
 # Calculate image similarity with pearson correlation
 # Feasible to run in serial for small number of images
-print "Calculating spatial image similarity with pearson score, complete case analysis (set of overlapping voxels) for pairwise images..."
+print("Calculating spatial image similarity with pearson score, complete case analysis (set of overlapping voxels) for pairwise images...")
 image_ids = images.image_id.tolist()
 simmatrix = pandas.DataFrame(columns=image_ids,index=image_ids)
 for id1 in image_ids:
-    print "Processing %s..." %id1
+    print("Processing %s..." %id1) 
     mr1_id = pad_zeros(id1)
     mr1_path = "%s/resampled_z/%s.nii.gz" %(data,mr1_id)
     mr1 = nibabel.load(mr1_path)
@@ -152,7 +156,7 @@ if not os.path.exists(outfolder_z4mm):
 maps = glob("%s/*.nii.gz" %outfolder_z)
 for mr in maps:
     image_name = os.path.basename(mr)
-    print "Resampling %s to 4mm..." %(image_name)
+    print("Resampling %s to 4mm..." %(image_name))
     nii = nibabel.load(mr)
     nii_resamp = resample_img(nii,target_affine=numpy.diag([4,4,4]))
     nibabel.save(nii_resamp,"%s/%s" %(outfolder_z4mm,image_name))

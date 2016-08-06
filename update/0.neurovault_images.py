@@ -45,7 +45,7 @@ keepers = []
 for unique_collection in unique_collections:
     collection_images = images[images.collection_id==unique_collection]
     other_contrasts = collection_images.cognitive_contrast_cogatlas[collection_images.cognitive_contrast_cogatlas.isin([None,"None / Other"])==False].unique()
-    print "Collection %s has %s tagged maps" %(unique_collection,len(other_contrasts))
+    print("Collection %s has %s tagged maps" %(unique_collection,len(other_contrasts)))
     if len(other_contrasts) > 0:
         keepers.append(unique_collection)
 
